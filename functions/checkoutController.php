@@ -90,10 +90,24 @@ if (isset($_POST['submit'])) {
 
                 $db = new DbController();
                 $paymentId = $db->createPayment($paymentResult, $_SESSION['user']);
-                var_dump($paymentId);
-                // $_SESSION['toast'] = "User Logged In Successfully";
-                // $_SESSION['user'] = $user['id'];
-                // header('Location: index.php');
+                $orderId = $db->createOrder($_SESSION['user'], $paymentId);
+
+                foreach ($cartList as $cartItem):
+                    $db->createOrderDetails($cartItem['productId'], $orderId, $cartItem['quantity']);
+                    $db->updateProductStock($cartItem['productId'], $cartItem['quantity']);
+                endforeach;
+
+                $shippingDetails = [
+                    'name'    => $name,
+                    'email'   => $email,
+                    'phone'   => $phone,
+                    'address' => $address,
+                ];
+                $db->createShipping($shippingDetails, $orderId);
+
+                // remove cart
+                unset($_SESSION['cart']);
+                header('Location: order_success.php');
             }
 
         } catch (Exception $error) {

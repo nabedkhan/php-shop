@@ -35,7 +35,7 @@
                                 <li class="dropdown-item py-3">Welcome <?php echo $user['name']; ?></li>
                                 <hr class="mt-0">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Orders</a></li>
+                                <li><a class="dropdown-item" href="orders.php">Orders</a></li>
                                 <li><a class="dropdown-item" href="index.php?logout=true">Logout</a></li>
                             </ul>
                         </div>

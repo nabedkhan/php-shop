@@ -10,10 +10,11 @@ class PaymentController {
         $this->stripe = new \Stripe\StripeClient($this->stripeKey);
     }
 
-    public function createStripeCustomer() {
-        var_dump($this->stripe);
-    }
-
+    /**
+     * create charge from stripe account
+     * @param  mixed $chargeInfo
+     * @return array
+     */
     public function createChargeFromCard(array $chargeInfo) {
         $token = $this->stripe->tokens->create([
             'card' => [
