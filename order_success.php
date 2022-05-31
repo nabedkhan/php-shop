@@ -14,7 +14,7 @@ require_once "partials/header.php";
                 <div class="card card-body d-flex align-items-center flex-column p-5">
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 80px;"></i>
                     <h4 class="text-uppercase py-3">Your Order is Sucessfully Created!</h4>
-                    <a href="index.php" class="btn btn-dark rounded-0 px-5 mt-4">Your Orders</a>
+                    <a href="orders.php" class="btn btn-dark rounded-0 px-5 mt-4">Your Orders</a>
                 </div>
             </div>
         </div>

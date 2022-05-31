@@ -185,14 +185,51 @@ class DbController {
         endif;
     }
 
+    /**
+     * get all orders under a single user
+     * @param  mixed $userId
+     * @return array
+     */
     public function getSingleUserOrders($userId) {
         $orders = [];
-        $query = "SELECT orders.id, orders.created_at, payments.charge_amount FROM ORDERS JOIN PAYMENTS ON ORDERS.PAYMENT_ID = PAYMENTS.ID WHERE ORDERS.USER_ID='$userId'";
+        $query = "SELECT orders.id, orders.created_at, payments.charge_amount FROM ORDERS
+        JOIN PAYMENTS ON ORDERS.PAYMENT_ID = PAYMENTS.ID WHERE ORDERS.USER_ID='$userId'";
 
         $response = mysqli_query($this->connection, $query);
         while ($order = mysqli_fetch_assoc($response)) {
             array_push($orders, $order);
         }
         return $orders;
+    }
+
+    public function getOrderDetails($orderId) {
+        $products = [];
+        $order_details = [];
+
+        $query = "SELECT
+        products.id, products.name, products.price, products.image, orderdetails.quantity
+        FROM ORDERDETAILS
+        JOIN PRODUCTS ON ORDERDETAILS.PRODUCT_ID = PRODUCTS.ID
+        WHERE ORDERDETAILS.ORDER_ID = '$orderId'";
+
+        $response = mysqli_query($this->connection, $query);
+        while ($product = mysqli_fetch_assoc($response)) {
+            array_push($products, $product);
+        }
+
+        $query2 = "SELECT *
+        FROM ORDERS
+        JOIN SHIPPING ON SHIPPING.ORDER_ID = ORDERS.ID
+        JOIN PAYMENTS ON PAYMENTS.ID = ORDERS.PAYMENT_ID
+        WHERE ORDERS.ID = '$orderId'";
+
+        $response2 = mysqli_query($this->connection, $query2);
+        while ($details = mysqli_fetch_assoc($response2)) {
+            array_push($order_details, $details);
+        }
+        return [
+            'products'      => $products,
+            'order_details' => $order_details,
+        ];
     }
 }

@@ -4,11 +4,11 @@ require_once "functions/paymentController.php";
 require_once "helpers/redirectLogin.php";
 require_once "functions/dbController.php";
 require_once "helpers/get_title.php";
-require_once "partials/head.php";
-require_once "partials/header.php";
-
 // set page title
 set_title('Checkout - PHP E-Commerce Shop');
+
+require_once "partials/head.php";
+require_once "partials/header.php";
 
 $cartList = [];
 if (isset($_SESSION['cart'])):
