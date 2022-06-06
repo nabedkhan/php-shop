@@ -29,6 +29,7 @@ if (isset($_POST['submit'])) {
                 $user = $db->login($email, $password);
                 $_SESSION['toast'] = "User Logged In Successfully";
                 $_SESSION['user'] = $user['id'];
+                $_SESSION['admin'] = $user['admin'] ?? null;
 
                 if ($_GET['redirect']):
                     header('Location: ' . $_GET['redirect']);

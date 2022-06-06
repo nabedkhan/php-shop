@@ -5,7 +5,15 @@
         </li>
 
         <li class="list-group-item px-0">
-            <a class="nav-link text-dark" href="">Profile</a>
+            <a class="nav-link text-dark" href="">Users</a>
+        </li>
+
+        <li class="list-group-item px-0">
+            <a class="nav-link text-dark" href="">Products</a>
+        </li>
+
+        <li class="list-group-item px-0">
+            <a class="nav-link text-dark" href="">Add New Products</a>
         </li>
     </ul>
 </div>

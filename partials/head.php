@@ -18,11 +18,14 @@
     <!-- toastr -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- bootstrap js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
     <!-- custom css -->
     <link rel="stylesheet" href="assets/css/app.css">
     <!-- custom js -->
     <script type="text/javascript" src="assets/js/app.js"></script>
-
     <title><?php get_title()?></title>
 </head>
 

@@ -1,22 +1,6 @@
-<?php
-session_start();
-require_once "helpers/redirectLogin.php";
-require_once "helpers/flashMessage.php";
-require_once "functions/dbController.php";
-require_once "helpers/get_title.php";
-set_title('Orders - PHP E-Commerce Shop');
-
-require_once "partials/head.php";
-require_once "partials/header.php";
-
-$orderInfo = [];
-$db = new DbController;
-if (isset($_GET['orderId'])):
-    $orderInfo = $db->getOrderDetails($_GET['orderId']);
-endif;
-
-?>
-
+<!-- ============================================================= -->
+<?php require_once 'functions/orderDetailsController.php'?>
+<!-- ============================================================= -->
 
 <section class="full-height py-4">
     <div class="container">
@@ -26,13 +10,25 @@ endif;
 
                 <div class="card card-body rounded-3 border-0 box-shadow pb-0">
                     <div class="d-flex bg-light justify-content-between rounded-3 px-3 py-3">
-                        <p>Order ID: 9001997718074513</p>
-                        <p>Placed on: 31 May, 2022</p>
-                        <p>Delivered on: 31 May, 2022</p>
+                        <p>Order ID:
+                            <span class="fw-bold">#<?php echo $orderInfo['order_details']['order_id'] ?></span>
+                        </p>
+                        <p>Placed on:
+                            <span class="fw-bold">
+                                <?php echo date('d M, Y', strtotime($orderInfo['order_details']['created_at'])) ?>
+                            </span>
+                        </p>
+
+                        <?php if (isset($orderInfo['order_details']['delivered_at'])): ?>
+                        <p>Delivered on:
+                            <span class="fw-bold">
+                                <?php echo date('d M, Y', strtotime($orderInfo['order_details']['delivered_at'])) ?>
+                            </span>
+                        </p>
+                        <?php endif?>
                     </div>
 
                     <div class="mt-4">
-
                         <?php foreach ($orderInfo['products'] as $product): ?>
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="d-flex align-items-center gap-2">
@@ -42,33 +38,52 @@ endif;
                                     <p>$<?php echo $product['price'] ?> x <?php echo $product['quantity'] ?></p>
                                 </div>
                             </div>
-                            <button class="btn text-warning shadow-none">Write a review</button>
                         </div>
                         <?php endforeach?>
                     </div>
                 </div>
+
 
                 <div class="row mt-4">
                     <div class="col-md-6">
                         <div class="card card-body rounded-3 border-0 box-shadow">
                             <h5>Shipping Address</h5>
                             <hr>
-                            <p class="mb-2">Name: Mohammad Nabed Khan</p>
-                            <p class="mb-2">Email: nabed@gmail.com</p>
-                            <p class="mb-2">Phone: 01828895567</p>
-                            <p>Address: Middle Madarsha, Hathazari</p>
+                            <p class="mb-2">Name: <?php echo $orderInfo['order_details']['name'] ?></p>
+                            <p class="mb-2">Email: <?php echo $orderInfo['order_details']['email'] ?></p>
+                            <p class="mb-2">Phone: <?php echo $orderInfo['order_details']['phone'] ?></p>
+                            <p>Address: <?php echo $orderInfo['order_details']['address'] ?></p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card card-body rounded-3 border-0 box-shadow">
                             <h5>Order Summery</h5>
                             <hr>
-                            <p class="mb-2">Sub Total: <span class="float-end">$120</span></p>
-                            <p class="mb-2">Shipping: <span class="float-end">$10</span></p>
-                            <p class="mb-2">Total: <span class="float-end">$130</span></p>
-                            <p>Paid by Credit/Debit Card</p>
+
+                            <p class="mb-2">Total:
+                                <span class="float-end">
+                                    <?php echo $orderInfo['order_details']['charge_amount'] ?>
+                                </span>
+                            </p>
+
+                            <p class="mb-2">Payment Status:
+                                <span class="float-end text-success">
+                                    <?php echo $orderInfo['order_details']['payment_status'] ?>
+                                </span>
+                            </p>
+                            <p>Paid by <?php echo strtoupper($orderInfo['order_details']['card_type']) ?> Card</p>
                         </div>
                     </div>
+
+                    <?php if (isset($_SESSION['admin']) && !$orderInfo['order_details']['delivered']): ?>
+                    <form action="order_details.php?orderId=<?php echo $_GET['orderId'] ?>" method="POST" class="mt-5">
+                        <select class="form-select" name="delivered">
+                            <option value="progress" selected>Progress</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                        <button class="btn btn-dark shadow-none rounded-0 mt-3">Update Order</button>
+                    </form>
+                    <?php endif?>
                 </div>
             </div>
         </div>

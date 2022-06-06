@@ -41,10 +41,10 @@ if (isset($_POST['submit'])) {
                     break;
                 endif;
             }
-            header("Location: cart.php");
+            echo "<script> window.location.href = 'cart.php' </script>";
         else:
             $_SESSION['cart'] = [$cartItem];
-            header("Location: cart.php");
+            echo "<script> window.location.href = 'cart.php' </script>";
         endif;
     }
 

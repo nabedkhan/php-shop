@@ -107,7 +107,7 @@ if (isset($_POST['submit'])) {
 
                 // remove cart
                 unset($_SESSION['cart']);
-                header('Location: order_success.php');
+                echo "<script> window.location.href = 'order_success.php' </script>";
             }
 
         } catch (Exception $error) {

@@ -25,7 +25,7 @@ class DbController {
             throw new Exception('User exist with given email address', 400);
         } else {
             $hashPassword = password_hash($password, PASSWORD_BCRYPT);
-            $query = "INSERT INTO USERS VALUES ( DEFAULT ,'$name', '$email', '$hashPassword')";
+            $query = "INSERT INTO USERS VALUES ( DEFAULT ,'$name', '$email', '$hashPassword', DEFAULT)";
             if (mysqli_query($this->connection, $query)) {
                 $user = $this->login($email, $password);
                 return $user;
@@ -48,11 +48,16 @@ class DbController {
         if ($user) {
             $verifyPassword = password_verify($password, $user['password']);
             if ($verifyPassword) {
-                return [
+                $user_data = [
                     'name'  => $user['name'],
                     'email' => $user['email'],
                     'id'    => $user['id'],
                 ];
+
+                if ($user['isAdmin']) {
+                    $user_data = array_merge($user_data, ['admin' => 1]);
+                }
+                return $user_data;
             } else {
                 throw new Exception('Invalid Password');
             }
@@ -70,11 +75,17 @@ class DbController {
         $query = "SELECT * FROM USERS WHERE ID='$id'";
         $response = mysqli_query($this->connection, $query);
         if ($user = mysqli_fetch_assoc($response)) {
-            return [
+            $user_data = [
                 'name'  => $user['name'],
                 'email' => $user['email'],
                 'id'    => $user['id'],
             ];
+
+            if ($user['isAdmin']) {
+                array_merge($user_data, ['admin' => 1]);
+            }
+
+            return $user_data;
         } else {
             throw new Exception('User Not Found!', 404);
         }
@@ -224,12 +235,31 @@ class DbController {
         WHERE ORDERS.ID = '$orderId'";
 
         $response2 = mysqli_query($this->connection, $query2);
-        while ($details = mysqli_fetch_assoc($response2)) {
-            array_push($order_details, $details);
-        }
+        $order_details = mysqli_fetch_assoc($response2);
         return [
             'products'      => $products,
             'order_details' => $order_details,
         ];
+    }
+
+    // ==================================================================
+    // admin user database functionality
+
+    public function getAllOrders() {
+        $orders = [];
+        $query = "SELECT orders.id, orders.created_at, payments.charge_amount FROM ORDERS
+        JOIN PAYMENTS ON ORDERS.PAYMENT_ID = PAYMENTS.ID";
+
+        $response = mysqli_query($this->connection, $query);
+        while ($order = mysqli_fetch_assoc($response)) {
+            array_push($orders, $order);
+        }
+        return $orders;
+    }
+
+    public function updateOrderWithDelivered($orderId) {
+        $query = "UPDATE ORDERS SET delivered = 1, delivered_at = now() WHERE ID='$orderId'";
+        $response = mysqli_query($this->connection, $query);
+        return 'Order updated successfully';
     }
 }

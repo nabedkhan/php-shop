@@ -36,19 +36,20 @@
                         <?php endif?>
 
 
+                        <?php if ($product['stock'] > 0): ?>
                         <li class="list-group-item px-0 py-3">
                             <div class="d-flex align-items-center gap-3">
                                 <span>Quantity:</span>
 
                                 <select name="quantity" class="form-select w-25">
-                                    <option value="1" selected>1</option>
-                                    <?php for ($item = 2; $item <= $product['stock']; $item++): ?>
-                                    <option value="<?php echo $item ?>"><?php echo $item ?></option>
+                                    <?php for ($item = 1; $item <= $product['stock']; $item++): ?>
+                                    <option value="<?php echo $item ?>" <?php echo $item == 1 && 'selected' ?>>
+                                        <?php echo $item ?></option>
                                     <?php endfor?>
                                 </select>
                             </div>
                         </li>
-
+                        <?php endif;?>
                         <li class="list-group-item px-0 py-3">
                             <button type="submit" name="submit" class="btn btn-dark rounded-0 px-4"
                                 <?php echo $product['stock'] == 0 ? 'disabled' : '' ?>>Add To Cart</button>

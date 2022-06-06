@@ -10,7 +10,6 @@
 $products = [];
 $db = new DbController;
 $products = $db->getProducts();
-
 ?>
 
 <?php flashMessage();?>
