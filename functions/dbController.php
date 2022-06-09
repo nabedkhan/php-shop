@@ -259,7 +259,61 @@ class DbController {
 
     public function updateOrderWithDelivered($orderId) {
         $query = "UPDATE ORDERS SET delivered = 1, delivered_at = now() WHERE ID='$orderId'";
-        $response = mysqli_query($this->connection, $query);
+        mysqli_query($this->connection, $query);
         return 'Order updated successfully';
+    }
+
+    public function getAllUsers() {
+        $users = [];
+        $query = "SELECT * FROM USERS";
+        $response = mysqli_query($this->connection, $query);
+        while ($user = mysqli_fetch_assoc($response)) {
+            array_push($users, $user);
+        }
+        return $users;
+    }
+
+    public function getAllProducts() {
+        $products = [];
+        $query = "SELECT * FROM PRODUCTS";
+        $response = mysqli_query($this->connection, $query);
+        while ($product = mysqli_fetch_assoc($response)) {
+            array_push($products, $product);
+        }
+        return $products;
+    }
+
+    public function updateProduct($productId, $data) {
+        $name = $data['name'];
+        $brand = $data['brand'];
+        $price = $data['price'];
+        $stock = $data['stock'];
+        $category = $data['category'];
+        $description = $data['description'];
+
+        $query = "UPDATE PRODUCTS SET name = '$name', brand = '$brand', price = '$price',
+        stock = '$stock', category = '$category', description = '$description' WHERE ID='$productId'";
+
+        if (mysqli_query($this->connection, $query)) {
+            return 'Product updated successfully';
+        }
+    }
+
+    public function createNewProduct($productData) {
+        $name = $productData['name'];
+        $image = $productData['image'];
+        $description = $productData['description'];
+        $brand = $productData['brand'];
+        $category = $productData['category'];
+        $price = $productData['price'];
+        $stock = $productData['stock'];
+
+        $query = "INSERT INTO PRODUCTS VALUES (DEFAULT, '$name', '$image', '$description', '$brand', '$category', '$price', '$stock', DEFAULT, DEFAULT)";
+
+        if (mysqli_query($this->connection, $query)) {
+            return 'Product created successfully';
+        }
+
+        throw new Exception('Product not created!');
     }
 }
